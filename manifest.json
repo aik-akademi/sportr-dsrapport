@@ -1,0 +1,25 @@
+{
+  "name": "AIK Akademi Sportrådsrapport",
+  "short_name": "AIK Sportråd",
+  "description": "AIK Akademi – Utvärderingsprocess för akademiverksamheten",
+  "start_url": "/sportr-dsrapport/index.html",
+  "scope": "/sportr-dsrapport/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "icons": [
+    {
+      "src": "aik-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "aik-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
