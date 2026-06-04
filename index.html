@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIK Akademi – Spelarregister</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AIK Spelarregister">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .logo-area img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      margin-bottom: 12px;
+    }
+
+    .logo-area .title {
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #1a1a2e;
+      text-transform: uppercase;
+    }
+
+    .logo-area .sub {
+      font-size: 0.78rem;
+      color: #888;
+      margin-top: 3px;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 7px;
+      font-size: 1rem;
+      letter-spacing: 3px;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 12px;
+    }
+
+    input[type="password"]:focus {
+      border-color: #1a1a2e;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #1a1a2e;
+      color: #f5c200;
+      border: none;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.85; }
+
+    .error {
+      color: #e74c3c;
+      font-size: 0.82rem;
+      text-align: center;
+      margin-top: 10px;
+      min-height: 18px;
+    }
+
+    /* App-väljare (admin) */
+    #app-chooser {
+      display: none;
+      text-align: center;
+    }
+
+    #app-chooser .welcome {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 24px;
+    }
+
+    #app-chooser .welcome strong {
+      color: #1a1a2e;
+    }
+
+    .app-btn {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 18px 20px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+      background: #fff;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .app-btn:hover {
+      border-color: #f5c200;
+      box-shadow: 0 2px 12px rgba(245,194,0,0.2);
+    }
+
+    .app-btn .app-icon {
+      font-size: 1.8rem;
+      width: 40px;
+      text-align: center;
+    }
+
+    .app-btn .app-info { text-align: left; }
+
+    .app-btn .app-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #1a1a2e;
+    }
+
+    .app-btn .app-desc {
+      font-size: 0.78rem;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .logout-link {
+      display: block;
+      margin-top: 16px;
+      font-size: 0.78rem;
+      color: #aaa;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Redirect-overlay */
+    #redirect-overlay {
+      display: none;
+      text-align: center;
+    }
+
+    #redirect-overlay .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #e0e0e0;
+      border-top-color: #1a1a2e;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #redirect-overlay p {
+      font-size: 0.88rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+
+    <!-- LOGIN -->
+    <div id="login-view">
+      <div class="logo-area">
+        <img src="aik-logo.png" alt="AIK" onerror="this.style.display='none'">
+        <div class="title">AIK Akademi</div>
+        <div class="sub">Spelarregister</div>
+      </div>
+      <input type="password" id="pin-input" placeholder="PIN-kod"
+             autocomplete="off"
+             onkeydown="if(event.key==='Enter') doLogin()">
+      <button class="btn" onclick="doLogin()">Logga in</button>
+      <div class="error" id="error-msg"></div>
+    </div>
+
+    <!-- ADMIN: Välj app -->
+    <div id="app-chooser">
+      <div class="logo-area">
+        <img src="aik-logo.png" alt="AIK" onerror="this.style.display='none'">
+        <div class="title">AIK Akademi</div>
+      </div>
+      <div class="welcome">Inloggad som <strong>Admin</strong> – välj modul</div>
+
+      <a class="app-btn" onclick="openApp('1319')">
+        <div class="app-icon" style="width:36px;height:36px;border-radius:50%;background:#A18A5C;flex-shrink:0"></div>
+        <div class="app-info">
+          <div class="app-name">Sportråd 13–19</div>
+          <div class="app-desc">P13–P19 · F13–F19</div>
+        </div>
+      </a>
+
+      <a class="app-btn" onclick="openApp('1012')">
+        <div class="app-icon" style="width:36px;height:36px;border-radius:50%;background:#0D2E47;flex-shrink:0"></div>
+        <div class="app-info">
+          <div class="app-name">Sportråd 10–12</div>
+          <div class="app-desc">P10–P12 · F10–F12</div>
+        </div>
+      </a>
+
+      <span class="logout-link" onclick="doLogout()">Logga ut</span>
+    </div>
+
+    <!-- REDIRECT -->
+    <div id="redirect-overlay">
+      <div class="spinner"></div>
+      <p id="redirect-msg">Loggar in…</p>
+    </div>
+
+  </div>
+
+  <script>
+    // =========================================================
+    // KOMBINERADE PIN-KODER
+    // app: '1319' = spelare-modul-19-13.html
+    //      '1012' = ung-spelare-modul.html
+    // =========================================================
+    const PINS = {
+      // 13–19
+      'AIKP19':    { lag: 'P19', roll: 'tränare', app: '1319' },
+      'AIKP17':    { lag: 'P17', roll: 'tränare', app: '1319' },
+      'AIKP16':    { lag: 'P16', roll: 'tränare', app: '1319' },
+      'AIKP15':    { lag: 'P15', roll: 'tränare', app: '1319' },
+      'AIKP14':    { lag: 'P14', roll: 'tränare', app: '1319' },
+      'AIKP13':    { lag: 'P13', roll: 'tränare', app: '1319' },
+      'AIKF19':    { lag: 'F19', roll: 'tränare', app: '1319' },
+      'AIKF17':    { lag: 'F17', roll: 'tränare', app: '1319' },
+      'AIKF15':    { lag: 'F15', roll: 'tränare', app: '1319' },
+      'AIKF14':    { lag: 'F14', roll: 'tränare', app: '1319' },
+      'AIKF13':    { lag: 'F13', roll: 'tränare', app: '1319' },
+      // 10–12
+      'AIKF10':    { lag: 'F10', roll: 'tränare', app: '1012' },
+      'AIKF11':    { lag: 'F11', roll: 'tränare', app: '1012' },
+      'AIKF12':    { lag: 'F12', roll: 'tränare', app: '1012' },
+      'AIKP10':    { lag: 'P10', roll: 'tränare', app: '1012' },
+      'AIKP11':    { lag: 'P11', roll: 'tränare', app: '1012' },
+      'AIKP12':    { lag: 'P12', roll: 'tränare', app: '1012' },
+      // Admin – tillgång till båda
+      'AIKAKADEMI':{ lag: null,  roll: 'admin',   app: 'both' }
+    };
+
+    const APP_URLS = {
+      '1319': 'sportrad-1319.html',
+      '1012': 'sportrad-1012.html'
+    };
+
+    function doLogin() {
+      const pin  = document.getElementById('pin-input').value.trim().toUpperCase();
+      const user = PINS[pin];
+      document.getElementById('error-msg').textContent = '';
+
+      if (!user) {
+        document.getElementById('error-msg').textContent = 'Felaktig PIN-kod';
+        document.getElementById('pin-input').value = '';
+        return;
+      }
+
+      // Spara session
+      sessionStorage.setItem('aik_auth', JSON.stringify({
+        pin,
+        lag:  user.lag,
+        roll: user.roll,
+        app:  user.app
+      }));
+
+      if (user.roll === 'admin') {
+        showAdminChooser();
+      } else {
+        redirectToApp(user.app, user);
+      }
+    }
+
+    function showAdminChooser() {
+      document.getElementById('login-view').style.display   = 'none';
+      document.getElementById('redirect-overlay').style.display = 'none';
+      document.getElementById('app-chooser').style.display  = 'block';
+    }
+
+    function openApp(appKey) {
+      const auth = JSON.parse(sessionStorage.getItem('aik_auth') || '{}');
+      auth.app = appKey;
+      sessionStorage.setItem('aik_auth', JSON.stringify(auth));
+      redirectToApp(appKey, auth);
+    }
+
+    function redirectToApp(appKey, user) {
+      document.getElementById('login-view').style.display      = 'none';
+      document.getElementById('app-chooser').style.display     = 'none';
+      document.getElementById('redirect-overlay').style.display = 'block';
+
+      const lagText = user.lag ? ` – ${user.lag}` : '';
+      document.getElementById('redirect-msg').textContent =
+        `Öppnar ${appKey === '1319' ? 'Sportråd 13–19' : 'Sportråd 10–12'}${lagText}…`;
+
+      setTimeout(() => {
+        window.location.href = APP_URLS[appKey];
+      }, 600);
+    }
+
+    function doLogout() {
+      sessionStorage.removeItem('aik_auth');
+      document.getElementById('app-chooser').style.display  = 'none';
+      document.getElementById('login-view').style.display   = 'block';
+      document.getElementById('pin-input').value = '';
+    }
+
+    // Om redan inloggad – visa väljare direkt (admin) eller redirecta
+    (function checkExistingSession() {
+      const raw = sessionStorage.getItem('aik_auth');
+      if (!raw) return;
+      try {
+        const auth = JSON.parse(raw);
+        if (auth.roll === 'admin') {
+          showAdminChooser();
+        }
+        // Tränare som navigerat hit igen: visa login igen (de bör komma från appen)
+      } catch(e) {}
+    })();
+  </script>
+</body>
+</html>
