@@ -351,6 +351,9 @@
     <div id="dash-matrix"></div>
     <div id="dash-legend" style="display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:0.75rem;color:#888"></div>
     <div id="dash-serietabell" style="margin-top:24px"></div>
+    <div id="dash-kalender" style="margin-top:24px"></div>
+    <div id="dash-periodplan" style="margin-top:24px"></div>
+    <div id="dash-standardvecka" style="margin-top:24px"></div>
 
     <!-- SPINDLAR UNDER MATRISEN -->
     <div id="dash-spiders" style="display:none;margin-top:28px">
@@ -764,6 +767,18 @@
         style="background:none;border:none;border-bottom:3px solid transparent;padding:8px 20px;font-size:0.85rem;color:#888;cursor:pointer;margin-bottom:-2px">
         Lagstatistik
       </button>
+      <button id="mgmt-tab-kalender" onclick="mgmtShowTab('kalender')"
+        style="background:none;border:none;border-bottom:3px solid transparent;padding:8px 20px;font-size:0.85rem;color:#888;cursor:pointer;margin-bottom:-2px">
+        Kalender
+      </button>
+      <button id="mgmt-tab-periodplan" onclick="mgmtShowTab('periodplan')"
+        style="background:none;border:none;border-bottom:3px solid transparent;padding:8px 20px;font-size:0.85rem;color:#888;cursor:pointer;margin-bottom:-2px">
+        Periodplanering
+      </button>
+      <button id="mgmt-tab-standardvecka" onclick="mgmtShowTab('standardvecka')"
+        style="background:none;border:none;border-bottom:3px solid transparent;padding:8px 20px;font-size:0.85rem;color:#888;cursor:pointer;margin-bottom:-2px">
+        Standardvecka
+      </button>
     </div>
 
     <!-- STATUSÖVERSIKT -->
@@ -872,6 +887,73 @@
       <div id="lagstat-table-container" style="overflow-x:auto"></div>
       <div id="lagstat-save-status" style="font-size:0.78rem;color:#888;margin-top:8px"></div>
     </div>
+
+    <!-- KALENDER -->
+    <div id="mgmt-section-kalender" style="display:none">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+        <div>
+          <div style="font-size:0.8rem;color:#888;margin-bottom:4px">Välj lag och ladda upp kalenderbilder (max 3 bilder per lag)</div>
+          <div class="ctrl-group" style="margin-top:8px">
+            <label style="font-size:0.75rem;font-weight:700;color:#1a1a2e">Lag</label>
+            <select id="kalender-lag-sel" onchange="renderMultiImgSection('kalender')" style="margin-top:4px">
+              <option value="">Välj lag...</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn secondary" style="font-size:0.78rem;padding:5px 14px" onclick="document.getElementById('kalender-img-input').click()">🖼 Ladda upp bild</button>
+          <input type="file" id="kalender-img-input" accept="image/*" multiple style="position:absolute;opacity:0;pointer-events:none" onchange="importMultiImage(this,'kalender')">
+          <button class="btn secondary" onclick="clearMultiImgData('kalender')" style="font-size:0.78rem;padding:5px 14px">🗑 Rensa</button>
+        </div>
+      </div>
+      <div id="kalender-img-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px"></div>
+      <div id="kalender-save-status" style="font-size:0.78rem;color:#888;margin-top:8px"></div>
+    </div>
+
+    <!-- PERIODPLANERING -->
+    <div id="mgmt-section-periodplan" style="display:none">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+        <div>
+          <div style="font-size:0.8rem;color:#888;margin-bottom:4px">Välj lag och ladda upp periodplaneringsbilder (max 3 bilder per lag)</div>
+          <div class="ctrl-group" style="margin-top:8px">
+            <label style="font-size:0.75rem;font-weight:700;color:#1a1a2e">Lag</label>
+            <select id="periodplan-lag-sel" onchange="renderMultiImgSection('periodplan')" style="margin-top:4px">
+              <option value="">Välj lag...</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn secondary" style="font-size:0.78rem;padding:5px 14px" onclick="document.getElementById('periodplan-img-input').click()">🖼 Ladda upp bild</button>
+          <input type="file" id="periodplan-img-input" accept="image/*" multiple style="position:absolute;opacity:0;pointer-events:none" onchange="importMultiImage(this,'periodplan')">
+          <button class="btn secondary" onclick="clearMultiImgData('periodplan')" style="font-size:0.78rem;padding:5px 14px">🗑 Rensa</button>
+        </div>
+      </div>
+      <div id="periodplan-img-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px"></div>
+      <div id="periodplan-save-status" style="font-size:0.78rem;color:#888;margin-top:8px"></div>
+    </div>
+
+    <!-- STANDARDVECKA -->
+    <div id="mgmt-section-standardvecka" style="display:none">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+        <div>
+          <div style="font-size:0.8rem;color:#888;margin-bottom:4px">Välj lag och ladda upp standardveckobilder (max 3 bilder per lag)</div>
+          <div class="ctrl-group" style="margin-top:8px">
+            <label style="font-size:0.75rem;font-weight:700;color:#1a1a2e">Lag</label>
+            <select id="standardvecka-lag-sel" onchange="renderMultiImgSection('standardvecka')" style="margin-top:4px">
+              <option value="">Välj lag...</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn secondary" style="font-size:0.78rem;padding:5px 14px" onclick="document.getElementById('standardvecka-img-input').click()">🖼 Ladda upp bild</button>
+          <input type="file" id="standardvecka-img-input" accept="image/*" multiple style="position:absolute;opacity:0;pointer-events:none" onchange="importMultiImage(this,'standardvecka')">
+          <button class="btn secondary" onclick="clearMultiImgData('standardvecka')" style="font-size:0.78rem;padding:5px 14px">🗑 Rensa</button>
+        </div>
+      </div>
+      <div id="standardvecka-img-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px"></div>
+      <div id="standardvecka-save-status" style="font-size:0.78rem;color:#888;margin-top:8px"></div>
+    </div>
+
   </div>
 </div>
 
@@ -1678,6 +1760,9 @@ function renderDashboard() {
 
   // Serietabell (visas bara när lag är valt)
   renderDashSerietabell();
+
+  // Kalender, Periodplanering, Standardvecka
+  renderDashMultiImgs();
 
   // Spindlar
   renderDashSpiders(lagVals, lag, period);
@@ -3430,6 +3515,19 @@ function exportDashboardPDF() {
       <div style="font-size:8pt;color:#aaa">${new Date().toLocaleDateString('sv-SE')}</div>
     </div>`;
 
+  // Bygg multi-bild sidor för PDF
+  const multiImgPages = ['kalender','periodplan','standardvecka'].map(typ => {
+    const data = getMultiImgData(typ);
+    const imgs = (data[lag] || []).slice(0, 3);
+    if (!imgs.length) return '';
+    return `<div class="pdf-page">
+      ${header(MULTI_IMG_LABELS[typ])}
+      <div style="display:grid;grid-template-columns:repeat(${Math.min(imgs.length,2)},1fr);gap:10px;margin-top:10px">
+        ${imgs.map(src => `<img src="${src}" style="width:100%;border-radius:4px;border:1px solid #ddd">`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
   printArea.innerHTML = `
     <div class="pdf-page">
       ${header('Nyckeltal & Spelarlista')}
@@ -3445,7 +3543,8 @@ function exportDashboardPDF() {
     <div class="pdf-page">
       ${header('Lagets samlade profil')}
       <div style="max-width:460px;margin:0 auto">${teamSvg}</div>
-    </div>`;
+    </div>
+    ${multiImgPages}`;
 
   window.print();
   setTimeout(() => { printArea.innerHTML = ''; }, 1000);
@@ -3532,6 +3631,122 @@ function printRorelse(namn) {
 }
 
 // scoreCol – använder SKALA_COL (skala −3 till +5), rundar decimalvärden
+
+// =========================================================
+// MULTI-BILD FLIKAR: Kalender, Periodplanering, Standardvecka
+// =========================================================
+const MULTI_IMG_LABELS = {
+  'kalender':      'Kalender',
+  'periodplan':    'Periodplanering',
+  'standardvecka': 'Standardvecka'
+};
+
+function getMultiImgData(typ) {
+  try { return JSON.parse(localStorage.getItem('multiimg_' + typ + '_stor') || '{}'); } catch(e) { return {}; }
+}
+function saveMultiImgData(typ, data) {
+  localStorage.setItem('multiimg_' + typ + '_stor', JSON.stringify(data));
+}
+
+function renderMultiImgSection(typ) {
+  const sel = document.getElementById(typ + '-lag-sel');
+  if (sel && sel.options.length <= 1) {
+    STOR_LAGS.forEach(l => { const o = document.createElement('option'); o.value=l; o.textContent=l; sel.appendChild(o); });
+  }
+  const lag = sel?.value || '';
+  const container = document.getElementById(typ + '-img-container');
+  if (!container) return;
+  if (!lag) { container.innerHTML = ''; return; }
+
+  const data = getMultiImgData(typ);
+  const imgs = (data[lag] || []).slice(0, 3);
+
+  container.innerHTML = imgs.length === 0
+    ? `<div style="color:#bbb;font-size:0.85rem;padding:20px 0">Inga bilder uppladdade för ${lag} än</div>`
+    : imgs.map((src, i) => `
+        <div style="position:relative">
+          <img src="${src}" style="width:100%;border-radius:6px;border:1px solid #e0e0e0;display:block">
+          <button onclick="removeMultiImg('${typ}','${lag}',${i})"
+            style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.55);color:#fff;border:none;border-radius:4px;padding:3px 8px;cursor:pointer;font-size:0.75rem">✕ Ta bort</button>
+        </div>`).join('');
+
+  const statusEl = document.getElementById(typ + '-save-status');
+  if (statusEl) statusEl.textContent = imgs.length > 0 ? `✓ ${imgs.length} bild${imgs.length>1?'er':''} uppladdad${imgs.length>1?'e':''}` : '';
+}
+
+function importMultiImage(input, typ) {
+  const lag = document.getElementById(typ + '-lag-sel').value;
+  if (!lag) { alert('Välj ett lag först'); return; }
+  const files = Array.from(input.files);
+  if (!files.length) return;
+
+  const data = getMultiImgData(typ);
+  const existing = data[lag] || [];
+  const available = 3 - existing.length;
+  if (available <= 0) { alert('Max 3 bilder per lag. Ta bort en bild först.'); return; }
+
+  const toLoad = files.slice(0, available);
+  let loaded = 0;
+
+  toLoad.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      existing.push(e.target.result);
+      loaded++;
+      if (loaded === toLoad.length) {
+        data[lag] = existing;
+        saveMultiImgData(typ, data);
+        renderMultiImgSection(typ);
+        renderDashMultiImgs();
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function removeMultiImg(typ, lag, idx) {
+  const data = getMultiImgData(typ);
+  if (data[lag]) {
+    data[lag].splice(idx, 1);
+    saveMultiImgData(typ, data);
+    renderMultiImgSection(typ);
+    renderDashMultiImgs();
+  }
+}
+
+function clearMultiImgData(typ) {
+  const lag = document.getElementById(typ + '-lag-sel').value;
+  if (!lag) return;
+  if (!confirm(`Rensa alla ${MULTI_IMG_LABELS[typ]}-bilder för ${lag}?`)) return;
+  const data = getMultiImgData(typ);
+  delete data[lag];
+  saveMultiImgData(typ, data);
+  renderMultiImgSection(typ);
+  renderDashMultiImgs();
+}
+
+function renderDashMultiImgs() {
+  const lag = document.getElementById('dash-lag')?.value;
+  if (!lag) return;
+
+  ['kalender','periodplan','standardvecka'].forEach(typ => {
+    const el = document.getElementById('dash-' + typ);
+    if (!el) return;
+    const data = getMultiImgData(typ);
+    const imgs = (data[lag] || []).slice(0, 3);
+    if (!imgs.length) { el.innerHTML = ''; return; }
+
+    el.innerHTML = `
+      <div style="font-size:0.72rem;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">
+        ${MULTI_IMG_LABELS[typ].toUpperCase()} – ${lag}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">
+        ${imgs.map(src => `<img src="${src}" style="width:100%;border-radius:6px;border:1px solid #e0e0e0;display:block">`).join('')}
+      </div>`;
+  });
+}
+
 function scoreCol(n) {
   const v = parseFloat(n);
   if (isNaN(v)) return '#999';
@@ -3614,7 +3829,7 @@ function mgmtSaveComment(lag, val) {
 }
 
 function mgmtShowTab(tab) {
-  ['status','vb','stat','lagstat'].forEach(t => {
+  ['status','vb','stat','lagstat','kalender','periodplan','standardvecka'].forEach(t => {
     const sec = document.getElementById('mgmt-section-' + t);
     const btn = document.getElementById('mgmt-tab-' + t);
     if (sec) sec.style.display = t === tab ? '' : 'none';
@@ -3627,6 +3842,9 @@ function mgmtShowTab(tab) {
   if (tab === 'vb') renderMgmtVB();
   if (tab === 'stat') renderStatSection();
   if (tab === 'lagstat') renderLagstatSection();
+  if (tab === 'kalender') renderMultiImgSection('kalender');
+  if (tab === 'periodplan') renderMultiImgSection('periodplan');
+  if (tab === 'standardvecka') renderMultiImgSection('standardvecka');
 }
 
 function renderMgmtVB() {
