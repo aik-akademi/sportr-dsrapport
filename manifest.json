@@ -6,17 +6,17 @@
   "scope": "/sportr-dsrapport/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#1a1a2e",
-  "theme_color": "#1a1a2e",
+  "background_color": "#111111",
+  "theme_color": "#111111",
   "icons": [
     {
-      "src": "aik-logo.png",
+      "src": "aik-sr-icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "aik-logo.png",
+      "src": "aik-sr-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
